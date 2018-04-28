@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # vue-memo
 
 > 基于 vue 写的备忘录
@@ -19,3 +20,7 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+=======
+# vueMemo
+基于 Vue 的备忘录
+>>>>>>> dbc94321426e5c1de5e9fdd03dc6b4d920827c49
