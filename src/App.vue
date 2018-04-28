@@ -1,23 +1,32 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <home-button v-if="$route.path !== '/Home'"></home-button>
     <router-view/>
   </div>
 </template>
 
 <script>
+import HomeButton from '@/components/common/HomeButton'
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    HomeButton
+  }
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 #app {
+  height: 100%;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  .icon {
+    width: 2em; height: 2em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+  }
 }
 </style>

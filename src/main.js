@@ -2,7 +2,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+import fastclick from 'fastclick'
+require('../static/css/common.css')
+
 Vue.config.productionTip = false
+
+fastclick.attach(document.body)
 
 /* eslint-disable no-new */
 new Vue({
