@@ -24,12 +24,12 @@ export default new Router({
     },
     {
       path: '/DList',
-      name: '心 情',
+      name: 'B B 记 录',
       component: DList
     },
     {
       path: '/DList/DCreate',
-      name: '新 建 心 情',
+      name: '说 什 么 呢',
       component: DCreate
     },
     {

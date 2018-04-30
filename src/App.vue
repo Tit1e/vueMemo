@@ -13,9 +13,13 @@ export default {
     HomeButton
   },
   created(){
-    let data = localStorage.getItem('momeList')
-    if(data === null){
+    let momeList = localStorage.getItem('momeList')
+    if(momeList === null){
       localStorage.setItem('momeList',JSON.stringify({}))
+    }
+    let diaryList = localStorage.getItem('diaryList')
+    if(diaryList === null){
+      localStorage.setItem('diaryList',JSON.stringify([]))
     }
   }
 }

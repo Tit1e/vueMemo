@@ -18,3 +18,16 @@ export function mset(obj, date) {
     localStorage.setItem('momeList',data)
   }
 }
+export function dget() {
+  let dataJson = localStorage.getItem('diaryList')
+  let data = JSON.parse(dataJson)
+  if (data === null) {
+    return []
+  } else {
+    return data.reverse()
+  }
+}
+export function dset(obj) {
+  let data = JSON.stringify(obj.reverse())
+  localStorage.setItem('diaryList',data)
+}

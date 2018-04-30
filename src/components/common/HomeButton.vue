@@ -15,6 +15,7 @@
   border-radius: 50%;
   background-color: #54BF8E;
   box-shadow: 0px 0px 4px 0px rgba($color: #000000, $alpha: 0.6);
+  z-index: 99;
   .iconfont{
     font-size: 30px;
     color: #fff;
