@@ -11,6 +11,12 @@ export default {
   name: 'App',
   components: {
     HomeButton
+  },
+  created(){
+    let data = localStorage.getItem('momeList')
+    if(data === null){
+      localStorage.setItem('momeList',JSON.stringify({}))
+    }
   }
 }
 </script>
