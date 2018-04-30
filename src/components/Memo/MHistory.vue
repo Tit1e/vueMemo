@@ -3,23 +3,28 @@
     <c-title></c-title>
     <h3 class="h3">历史未完成</h3>
     <ul class="m-list">
-      <li class="m-list-item">
-        <span><i class="iconfont icon-fangxingweixuanzhong"></i> 吃饭</span>
+      <li class="m-list-item" v-for="item in list" v-if="!item.isfinsh" :key="item.createtime">
+        <span>
+          <i class="iconfont icon-fangxingweixuanzhong"></i> 
+          <span>{{ item.content }}</span>
+        </span>
         <div>
-          <span>2018 年 4月 1日</span>&nbsp;&nbsp;
-          <span><i class="iconfont icon-system-deleteb"></i></span>
+          <span>{{item.createtime | formatDate}}</span>&nbsp;&nbsp;
+          <span @click="Delete(item)"><i class="iconfont icon-system-deleteb"></i></span>
         </div>
       </li>
     </ul>
     <h3 class="h3">历史已完成</h3>
-    <ul class="m-list">
+    <ul class="m-list" v-for="item in list" v-if="item.isfinsh" :key="item.createtime">
       <li class="m-list-item">
         <div>
-          <span><i class="iconfont icon-fangxingxuanzhongfill"></i></span> <span>吃饭</span>
+          <span>
+            <i class="iconfont icon-fangxingxuanzhongfill"></i></span> 
+            <span class="_finsh">{{ item.content }}</span>
         </div>
         <div>
-          <span>2018 年 4月 1日</span>&nbsp;&nbsp;
-          <span><i class="iconfont icon-system-deleteb"></i></span>
+          <span>{{item.finshtime | formatDate}}</span>&nbsp;&nbsp;
+          <span @click="Delete(item)"><i class="iconfont icon-system-deleteb"></i></span>
         </div>
       </li>
     </ul>
@@ -29,6 +34,8 @@
 <script>
 import CTitle from '@/components/common/CTitle'
 import NowHistoryButton from '@/components/common/NowHistoryButton'
+import { formatDate } from '../../js/dateFormat.js'
+import { mget, mset } from '../../js/getData'
 export default {
   components: {
     "c-title": CTitle,
@@ -36,11 +43,42 @@ export default {
   },
   data(){
     return{
-
+      list: [],
     }
   },
   created(){
-    console.log(this.$route)
+    this.initData()
+  },
+  methods: {
+    initData(){
+      let rData = mget()
+      let nowDate = formatDate(new Date(),'yyyy-MM-dd')
+      let list = []
+      for (const key in rData) {
+        if (key !== nowDate) {
+        console.log(key,nowDate)
+          list = list.concat(rData[key])
+        }
+      }
+      this.list = list
+    },
+    Delete(item){
+      this.list = this.list.filter(o => {
+        return item.createtime !== o.createtime
+      })
+      let date = formatDate(new Date(item.createtime),'yyyy-MM-dd')
+      let data = mget()
+      data[date] = data[date].filter(o => {
+        return item.createtime !== o.createtime
+      })
+      mset(data)
+    }
+  },
+  filters: {
+    formatDate(time) {
+      let date = new Date(time);
+      return formatDate(date, "yy/MM/dd");
+    }
   }
 }
 </script>

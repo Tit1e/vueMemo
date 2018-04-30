@@ -3,7 +3,7 @@
     <c-title></c-title>
     <h3 class="h3">今日未完成</h3>
     <ul class="m-list">
-      <li class="m-list-item" v-for="item in list" v-if="!item.finsh" :key="item.id">
+      <li class="m-list-item" v-for="item in list" v-if="!item.isfinsh" :key="item.id">
         <span @click="changState(item)">
           <i class="iconfont icon-fangxingweixuanzhong"></i> 
           <span>{{ item.content }}</span>
@@ -12,19 +12,19 @@
           <i v-if="item.urgent === '3'" class="urgent iconfont icon-youxianji"></i>
         </span>
         <div>
-          <span><i class="iconfont icon-edit"></i></span>&nbsp;&nbsp;
-          <span><i class="iconfont icon-system-deleteb" @click="Delete(item)"></i></span>
+          <span @click="Edit(item)"><i class="iconfont icon-edit"></i></span>&nbsp;&nbsp;
+          <span @click="Delete(item)"><i class="iconfont icon-system-deleteb"></i></span>
         </div>
       </li>
       <li class="m-list-item add">
         <div class="add-button">
-          <i class="iconfont icon-add" @click="()=>{showForm = true}"></i>
+          <i class="iconfont icon-add" @click="add"></i>
         </div>
       </li>
     </ul>
     <h3 class="h3">今日已完成</h3>
     <ul class="m-list">
-      <li class="m-list-item" v-for="item in list" v-if="item.finsh" :key="item.id">
+      <li class="m-list-item" v-for="item in list" v-if="item.isfinsh" :key="item.id">
         <span @click="changState(item)">
           <i class="iconfont icon-fangxingxuanzhongfill"></i> 
           <span class="_finsh">{{ item.content }}</span>
@@ -40,7 +40,9 @@
     <change-btn></change-btn>
     <m-create
       v-if="showForm"
-      @close="close"></m-create>
+      @close="close"
+      :param="param">
+    </m-create>
   </div>
 </template>
 <script>
@@ -59,13 +61,18 @@ export default {
     return{
       list: [],
       showForm: false,
-      date: formatDate(new Date(),'yyyy-MM-dd')
+      date: formatDate(new Date(),'yyyy-MM-dd'),
+      param: null
     }
   },
   created(){
     this.list = mget(this.date)
   },
   methods: {
+    add(){
+      this.param = null
+      this.showForm = true
+    },
     close(isUpdate){
       if(isUpdate){
         this.list = mget(this.date)
@@ -73,10 +80,19 @@ export default {
       this.showForm = false
     },
     changState(item){
-      console.log(item)
-      item.finsh = item.finsh ? 0 : 1
+      if(item.isfinsh){
+        item.isfinsh = 0
+        item.finshtime = ''
+      }else{
+        item.isfinsh = 1
+        item.finshtime = (new Date()).getTime()
+      }
       mset(this.list,this.date)
       this.list = mget(this.date)
+    },
+    Edit(item){
+      this.param = item
+      this.showForm = true
     },
     Delete(item){
       this.list = this.list.filter(o => {

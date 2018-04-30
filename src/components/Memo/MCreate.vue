@@ -1,7 +1,7 @@
 <template>
   <div class="m-create" @click="close">
     <div class="create-form">
-      <h3 class="h3">新建备忘</h3>
+      <h3 class="h3">{{param ? '编辑' : '新建'}}备忘</h3>
       <input type="text" v-model="formData.content" class="input">
       <div class="urgent">
         <label @click="cancelCheck('1')">
@@ -17,7 +17,7 @@
           <i class="iconfont icon-youxianji" :class="formData.urgent === '3' ? 'active' : ''"></i>
         </label>
       </div>
-      <button class="submit" @click="create">新 建</button>
+      <button class="submit" @click="submit">{{param ? '保 存' : '新 建'}}</button>
     </div>
   </div>
 </template>
@@ -25,12 +25,10 @@
 import { formatDate } from '../../js/dateFormat'
 import { mget, mset } from '../../js/getData'
 export default {
+  props:['param'],
   data(){
     return {
-      formData: {
-        content: '',
-        urgent: ''
-      }
+      formData: this.param ? Object.assign({},this.param) : {}
     }
   },
   methods: {
@@ -39,23 +37,37 @@ export default {
         this.$emit('close')
       }
     },
-    create(){
-      let now = new Date()
-      let nowDate = formatDate(now,'yyyy-MM-dd')
-      let data = mget()
-      if(data[nowDate] === undefined){
-        data[nowDate] = []
+    submit(){
+      if(!this.param){
+        let now = new Date()
+        let nowDate = formatDate(now,'yyyy-MM-dd')
+        let data = mget()
+        if(data[nowDate] === undefined){
+          data[nowDate] = []
+        }
+        // 如果当天没有记录，则 id 为 1 ，如果有记录，则取列表最后一个元素的 id 再 +1
+        this.formData.id = data[nowDate].length === 0 
+        ? 1 
+        : data[nowDate][data[nowDate].length - 1]['id'] + 1
+  
+        this.formData.createtime = now.getTime()
+        this.formData.isfinsh = 0
+        this.formData.finshtime = ''
+        data[nowDate].push(this.formData)
+        mset(data)
+      }else{
+        let date = new Date(this.param.createtime)
+        let format = formatDate(date,'yyyy-MM-dd')
+        let data = mget()
+        data[format].map(item => {
+          if(item.id === this.formData.id){
+            item.content = this.formData.content
+            item.urgent = this.formData.urgent
+          }
+        })
+        console.log(data)
+        mset(data)
       }
-      // 如果当天没有记录，则 id 为 1 ，如果有记录，则取列表最后一个元素的 id 再 +1
-      this.formData.id = data[nowDate].length === 0 
-      ? 1 
-      : data[nowDate][data[nowDate].length - 1]['id'] + 1
-
-      this.formData.createtime = now.getTime()
-      this.formData.isfinsh = 0
-      this.formData.finshtime = ''
-      data[nowDate].push(this.formData)
-      mset(data)
       this.$emit('close',1)
     },
     cancelCheck(val){
@@ -97,6 +109,7 @@ export default {
       width: 100%;
       height: 30px;
       font-size: 14px;
+      padding: 4px 10px;
     }
     .urgent{
       display: flex;
@@ -123,8 +136,9 @@ export default {
       color: #fff;
       font-size: 16px;
       font-weight: bold;
-      border-radius: 2px;
+      border-radius: 3px;
       margin: 0 auto;
+      padding: 4px 10px;
     }
   }
 }
