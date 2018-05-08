@@ -9,7 +9,7 @@
           <use :xlink:href="diary.icon"></use>
       </svg>
     </div>
-    <button class="submit" @click="submit">提 交</button>
+    <button class="submit" :disabled="!diary.content" @click="submit">提 交</button>
     <d-choose
       v-if="show"
       @choose="choose">
@@ -93,6 +93,9 @@ export default {
     border-radius: 3px;
     margin: 0 auto;
     padding: 4px 10px;
+    &:disabled{
+      background-color: rgb(137, 201, 172);
+    }
   }
 }
 </style>
