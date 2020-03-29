@@ -36,7 +36,7 @@ export default {
       },
       show: false
     }
-  },
+    },
   methods: {
     choose(icon){
       this.diary.icon = icon
